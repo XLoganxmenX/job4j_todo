@@ -17,7 +17,7 @@ public class HbmTaskRepository implements TaskRepository {
     private final SessionFactory sf;
 
     @Override
-    public Task create(Task task) {
+    public Task save(Task task) {
         Session session = sf.openSession();
         try {
             session.beginTransaction();

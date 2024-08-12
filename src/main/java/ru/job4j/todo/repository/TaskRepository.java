@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface TaskRepository {
-    Task create(Task task);
+    Task save(Task task);
 
     void update(Task task);
 
