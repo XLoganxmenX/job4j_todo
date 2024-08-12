@@ -97,7 +97,7 @@ public class HbmTaskRepository implements TaskRepository {
     }
 
     @Override
-    public List<Task> findByStatus(String status) {
+    public List<Task> findByStatus(boolean status) {
         List<Task> tasks = new ArrayList<>();
         Session session = sf.openSession();
         try {
