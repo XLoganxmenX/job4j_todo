@@ -20,9 +20,10 @@ public class Task {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
+    private String title;
     private String description;
     private LocalDateTime created = LocalDateTime.now();
-    private boolean done;
+    private Boolean done;
 
     @Override
     public boolean equals(Object o) {
@@ -33,11 +34,11 @@ public class Task {
             return false;
         }
         Task task = (Task) o;
-        return id == task.id && done == task.done && Objects.equals(description, task.description);
+        return id == task.id && done == task.done && Objects.equals(title, task.title);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, description, done);
+        return Objects.hash(id, title, done);
     }
 }

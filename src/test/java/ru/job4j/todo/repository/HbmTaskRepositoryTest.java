@@ -32,7 +32,7 @@ class HbmTaskRepositoryTest {
     @Test
     public void whenSaveTaskAndFindById() {
         var task = taskRepository.save(
-                new Task(0, "task", LocalDateTime.now(), true)
+                new Task(0, "task", "description", LocalDateTime.now(), true)
         );
         var savedTask = taskRepository.findById(task.getId()).get();
         assertThat(task).isEqualTo(savedTask);
@@ -47,7 +47,7 @@ class HbmTaskRepositoryTest {
     @Test
     public void whenUpdateAndThenGetSame() {
         var task = taskRepository.save(
-                new Task(0, "task", LocalDateTime.now(), true)
+                new Task(0, "task", "description", LocalDateTime.now(), true)
         );
         task.setDescription("new task");
         task.setDone(false);
@@ -59,7 +59,7 @@ class HbmTaskRepositoryTest {
     @Test
     public void whenDeleteThenNotFound()  {
         var task = taskRepository.save(
-                new Task(0, "task", LocalDateTime.now(), true)
+                new Task(0, "task", "description", LocalDateTime.now(), true)
         );
         taskRepository.delete(task.getId());
         var actualTask = taskRepository.findById(task.getId());
@@ -68,9 +68,9 @@ class HbmTaskRepositoryTest {
 
     @Test
     public void whenFindAllOrderById() {
-        var task1 = taskRepository.save(new Task(0, "task1", LocalDateTime.now(), true));
-        var task2 = taskRepository.save(new Task(0, "task2", LocalDateTime.now().plusHours(1), false));
-        var task3 = taskRepository.save(new Task(0, "task3", LocalDateTime.now().plusHours(2), true));
+        var task1 = taskRepository.save(new Task(0, "task1", "description1", LocalDateTime.now(), true));
+        var task2 = taskRepository.save(new Task(0, "task2", "description2", LocalDateTime.now().plusHours(1), false));
+        var task3 = taskRepository.save(new Task(0, "task3", "description3", LocalDateTime.now().plusHours(2), true));
         var expectedList = List.of(task1, task2, task3);
         var actualList = taskRepository.findAllOrderById();
         assertThat(actualList).containsExactlyElementsOf(expectedList);
@@ -78,9 +78,9 @@ class HbmTaskRepositoryTest {
 
     @Test
     public void whenFindByStatus() {
-        var task1 = taskRepository.save(new Task(0, "task1", LocalDateTime.now(), true));
-        var task2 = taskRepository.save(new Task(0, "task2", LocalDateTime.now().plusHours(1), false));
-        var task3 = taskRepository.save(new Task(0, "task3", LocalDateTime.now().plusHours(2), true));
+        var task1 = taskRepository.save(new Task(0, "task1", "description1", LocalDateTime.now(), true));
+        var task2 = taskRepository.save(new Task(0, "task2", "description1", LocalDateTime.now().plusHours(1), false));
+        var task3 = taskRepository.save(new Task(0, "task3", "description1", LocalDateTime.now().plusHours(2), true));
         var expectedList = List.of(task1, task3);
         var actualList = taskRepository.findByStatus(true);
         assertThat(actualList).isEqualTo(expectedList);

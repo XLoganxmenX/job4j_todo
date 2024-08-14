@@ -25,7 +25,7 @@ class SimpleTaskServiceTest {
 
     @Test
     public void whenSave() {
-        var task = new Task(1, "task", LocalDateTime.now(), true);
+        var task = new Task(1, "task", "description", LocalDateTime.now(), true);
         when(taskRepository.save(task)).thenReturn(task);
         var actualTask = taskService.save(task);
         assertThat(actualTask).isEqualTo(task);
@@ -33,7 +33,7 @@ class SimpleTaskServiceTest {
 
     @Test
     public void whenFindByIdExistThenGetTaskOptional() {
-        var task = new Task(1, "task", LocalDateTime.now(), true);
+        var task = new Task(1, "task", "description", LocalDateTime.now(), true);
         when(taskRepository.findById(task.getId())).thenReturn(Optional.of(task));
         var actualTask = taskService.findById(task.getId());
         assertThat(actualTask).isEqualTo(Optional.of(task));
@@ -48,9 +48,9 @@ class SimpleTaskServiceTest {
 
     @Test
     public void whenFindAllOrderById() {
-        var task1 = new Task(1, "task1", LocalDateTime.now(), true);
-        var task2 = new Task(2, "task2", LocalDateTime.now().plusHours(1), false);
-        var task3 = new Task(3, "task3", LocalDateTime.now().plusHours(2), true);
+        var task1 = new Task(1, "task1", "description1", LocalDateTime.now(), true);
+        var task2 = new Task(2, "task2", "description2", LocalDateTime.now().plusHours(1), false);
+        var task3 = new Task(3, "task3", "description3", LocalDateTime.now().plusHours(2), true);
         var expectedList = List.of(task1, task2, task3);
         when(taskRepository.findAllOrderById()).thenReturn(expectedList);
         var actualList = taskService.findAllOrderById();
@@ -59,9 +59,9 @@ class SimpleTaskServiceTest {
 
     @Test
     public void whenFindByStatus() {
-        var task1 = new Task(1, "task1", LocalDateTime.now(), true);
-        var task2 = new Task(2, "task2", LocalDateTime.now().plusHours(1), false);
-        var task3 = new Task(3, "task3", LocalDateTime.now().plusHours(2), true);
+        var task1 = new Task(1, "task1", "description1", LocalDateTime.now(), true);
+        var task2 = new Task(2, "task2", "description2", LocalDateTime.now().plusHours(1), false);
+        var task3 = new Task(3, "task3", "description3", LocalDateTime.now().plusHours(2), true);
         var expectedList = List.of(task1, task3);
         when(taskRepository.findByStatus(true)).thenReturn(expectedList);
         var actualList = taskService.findByStatus(true);
