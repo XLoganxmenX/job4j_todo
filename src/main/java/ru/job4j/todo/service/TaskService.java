@@ -1,5 +1,6 @@
 package ru.job4j.todo.service;
 
+import ru.job4j.todo.dto.ListPageTaskDto;
 import ru.job4j.todo.model.Task;
 
 import java.util.List;
@@ -15,6 +16,8 @@ public interface TaskService {
     Optional<Task> findById(int id);
 
     List<Task> findAllOrderById();
+
+    List<ListPageTaskDto> findAllTaskDtoOrderById();
 
     List<Task> findByStatus(boolean status);
 }

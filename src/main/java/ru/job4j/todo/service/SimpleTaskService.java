@@ -2,6 +2,8 @@ package ru.job4j.todo.service;
 
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+import ru.job4j.todo.dto.ListPageTaskDto;
+import ru.job4j.todo.mappers.TaskMapper;
 import ru.job4j.todo.model.Task;
 import ru.job4j.todo.repository.TaskRepository;
 
@@ -13,6 +15,7 @@ import java.util.Optional;
 public class SimpleTaskService implements TaskService {
 
     private final TaskRepository taskRepository;
+    private final TaskMapper taskMapper;
 
     @Override
     public Task save(Task task) {
@@ -37,6 +40,11 @@ public class SimpleTaskService implements TaskService {
     @Override
     public List<Task> findAllOrderById() {
         return taskRepository.findAllOrderById();
+    }
+
+    @Override
+    public List<ListPageTaskDto> findAllTaskDtoOrderById() {
+        return taskRepository.findAllOrderById().stream().map(taskMapper::getListPageDtoFromTask).toList();
     }
 
     @Override
