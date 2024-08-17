@@ -2,6 +2,7 @@ package ru.job4j.todo.service;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import ru.job4j.todo.mappers.TaskMapper;
 import ru.job4j.todo.model.Task;
 import ru.job4j.todo.repository.TaskRepository;
 
@@ -16,11 +17,12 @@ import static org.mockito.Mockito.when;
 class SimpleTaskServiceTest {
     private static TaskService taskService;
     private static TaskRepository taskRepository;
+    private static TaskMapper taskMapper;
 
     @BeforeAll
     public static void init() {
         taskRepository = mock(TaskRepository.class);
-        taskService = new SimpleTaskService(taskRepository);
+        taskService = new SimpleTaskService(taskRepository, taskMapper);
     }
 
     @Test

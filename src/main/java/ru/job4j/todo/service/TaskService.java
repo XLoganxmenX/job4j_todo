@@ -20,4 +20,6 @@ public interface TaskService {
     List<ListPageTaskDto> findAllTaskDtoOrderById();
 
     List<Task> findByStatus(boolean status);
+
+    List<ListPageTaskDto> findTasksDtoByStatus(boolean status);
 }

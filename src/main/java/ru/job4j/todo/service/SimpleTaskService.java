@@ -51,4 +51,9 @@ public class SimpleTaskService implements TaskService {
     public List<Task> findByStatus(boolean status) {
         return taskRepository.findByStatus(status);
     }
+
+    @Override
+    public List<ListPageTaskDto> findTasksDtoByStatus(boolean status) {
+        return taskRepository.findByStatus(status).stream().map(taskMapper::getListPageDtoFromTask).toList();
+    }
 }
