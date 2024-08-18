@@ -77,4 +77,15 @@ public class TaskController {
         taskService.update(task);
         return "redirect:/tasks";
     }
+
+    @GetMapping("/create")
+    public String getCreatePage() {
+        return "tasks/create";
+    }
+
+    @PostMapping("/save")
+    public String save(@ModelAttribute Task task) {
+        taskService.save(task);
+        return "redirect:/tasks";
+    }
 }
