@@ -41,7 +41,7 @@
                         </form>
                     </div>
                     <div class="col-4">
-                        <a class="btn btn-warning w-100" th:href="@{/tasks}">Редактировать</a>
+                        <a class="btn btn-warning w-100" th:href="@{/tasks/edit/{id}(id=*{id})}">Редактировать</a>
                     </div>
                     <div class="col-4">
                         <form th:action="@{/tasks/delete/{id}(id=*{id})}" method="post">

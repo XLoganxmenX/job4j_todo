@@ -60,4 +60,21 @@ public class TaskController {
         taskService.delete(id);
         return "redirect:/tasks";
     }
+
+    @GetMapping("/edit/{id}")
+    public String getEditPage(@PathVariable int id, Model model) {
+        var taskOptional = taskService.findById(id);
+        if (taskOptional.isEmpty()) {
+            model.addAttribute("message", "Задание с указанным идентификатором не найдено");
+            return "errors/404";
+        }
+        model.addAttribute("task", taskOptional.get());
+        return "tasks/edit";
+    }
+
+    @PostMapping("/update")
+    public String update(@ModelAttribute Task task) {
+        taskService.update(task);
+        return "redirect:/tasks";
+    }
 }
