@@ -43,7 +43,7 @@ public class TaskController {
     }
 
     @PostMapping("/complete/{id}")
-    public String completeTask(@PathVariable int id, Model model) {
+    public String deleteTask(@PathVariable int id, Model model) {
         var taskOptional = taskService.findById(id);
         if (taskOptional.isEmpty()) {
             model.addAttribute("message", "Задание с указанным идентификатором не найдено");
@@ -56,7 +56,7 @@ public class TaskController {
     }
 
     @PostMapping("/delete/{id}")
-    public String completeTask(@PathVariable int id) {
+    public String deleteTask(@PathVariable int id) {
         taskService.delete(id);
         return "redirect:/tasks";
     }
