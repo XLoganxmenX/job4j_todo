@@ -17,11 +17,11 @@ import static org.mockito.Mockito.when;
 class SimpleTaskServiceTest {
     private static TaskService taskService;
     private static TaskRepository taskRepository;
-    private static TaskMapper taskMapper;
 
     @BeforeAll
     public static void init() {
         taskRepository = mock(TaskRepository.class);
+        TaskMapper taskMapper = mock(TaskMapper.class);
         taskService = new SimpleTaskService(taskRepository, taskMapper);
     }
 
