@@ -23,7 +23,7 @@ public class Task {
     private String title;
     private String description;
     private LocalDateTime created = LocalDateTime.now();
-    private Boolean done;
+    private boolean done;
 
     @Override
     public boolean equals(Object o) {
@@ -34,11 +34,11 @@ public class Task {
             return false;
         }
         Task task = (Task) o;
-        return id == task.id && done == task.done && Objects.equals(title, task.title);
+        return id == task.id;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, title, done);
+        return Objects.hash(id);
     }
 }

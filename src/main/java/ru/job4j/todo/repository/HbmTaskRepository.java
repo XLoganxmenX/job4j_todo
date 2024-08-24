@@ -32,33 +32,47 @@ public class HbmTaskRepository implements TaskRepository {
     }
 
     @Override
-    public void update(Task task) {
+    public boolean update(Task task) {
         Session session = sf.openSession();
+        boolean isUpdated = false;
         try {
             session.beginTransaction();
+            if (session.get(Task.class, task.getId()) == null) {
+                return false;
+            }
+            session.clear();
             session.update(task);
             session.getTransaction().commit();
+            isUpdated = true;
         } catch (Exception e) {
             session.getTransaction().rollback();
         } finally {
             session.close();
         }
+        return isUpdated;
     }
 
     @Override
-    public void delete(int id) {
+    public boolean delete(int id) {
         Session session = sf.openSession();
+        boolean isDeleted = false;
         try {
             session.beginTransaction();
-            Task task = new Task();
-            task.setId(id);
-            session.delete(task);
+            if (session.get(Task.class, id) == null) {
+                return false;
+            }
+            session.clear();
+            session.createQuery("DELETE Task WHERE id = :fId")
+                    .setParameter("fId", id)
+                    .executeUpdate();
             session.getTransaction().commit();
+            isDeleted = true;
         } catch (Exception e) {
             session.getTransaction().rollback();
         } finally {
             session.close();
         }
+        return isDeleted;
     }
 
     @Override
@@ -112,5 +126,28 @@ public class HbmTaskRepository implements TaskRepository {
             session.close();
         }
         return tasks;
+    }
+
+    @Override
+    public boolean complete(int id) {
+        Session session = sf.openSession();
+        boolean isComplete = false;
+        try {
+            session.beginTransaction();
+            if (session.get(Task.class, id) == null) {
+                return false;
+            }
+            session.clear();
+            session.createQuery("UPDATE Task SET done = true WHERE id = :fId")
+                    .setParameter("fId", id)
+                    .executeUpdate();
+            session.getTransaction().commit();
+            isComplete = true;
+        } catch (Exception e) {
+            session.getTransaction().rollback();
+        } finally {
+            session.close();
+        }
+        return isComplete;
     }
 }

@@ -12,5 +12,5 @@ public class ListPageTaskDto {
     private int id;
     private String title;
     private LocalDateTime created;
-    private Boolean done;
+    private boolean done;
 }

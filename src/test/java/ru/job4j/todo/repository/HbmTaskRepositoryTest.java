@@ -45,15 +45,24 @@ class HbmTaskRepositoryTest {
     }
 
     @Test
+    public void whenUpdateNotExistThenGetFalse() {
+        var updateResult = taskRepository.update(
+                new Task(0, "task", "description", LocalDateTime.now(), true)
+        );
+        assertThat(updateResult).isFalse();
+    }
+
+    @Test
     public void whenUpdateAndThenGetSame() {
         var task = taskRepository.save(
                 new Task(0, "task", "description", LocalDateTime.now(), true)
         );
         task.setDescription("new task");
         task.setDone(false);
-        taskRepository.update(task);
+        var updateResult = taskRepository.update(task);
         var actualTask = taskRepository.findById(task.getId()).get();
         assertThat(actualTask).isEqualTo(task);
+        assertThat(updateResult).isTrue();
     }
 
     @Test
@@ -61,9 +70,16 @@ class HbmTaskRepositoryTest {
         var task = taskRepository.save(
                 new Task(0, "task", "description", LocalDateTime.now(), true)
         );
-        taskRepository.delete(task.getId());
+        var deleteResult = taskRepository.delete(task.getId());
         var actualTask = taskRepository.findById(task.getId());
         assertThat(actualTask).isEmpty();
+        assertThat(deleteResult).isTrue();
+    }
+
+    @Test
+    public void whenDeleteNotExistThenGetFalse()  {
+        var deleteResult = taskRepository.delete(0);
+        assertThat(deleteResult).isFalse();
     }
 
     @Test
@@ -84,6 +100,23 @@ class HbmTaskRepositoryTest {
         var expectedList = List.of(task1, task3);
         var actualList = taskRepository.findByStatus(true);
         assertThat(actualList).isEqualTo(expectedList);
+    }
+
+    @Test
+    public void whenCompleteExistThenTaskDoneTrue() {
+        var task = taskRepository.save(
+                new Task(0, "task", "description", LocalDateTime.now(), false)
+        );
+        var updateResult = taskRepository.complete(task.getId());
+        var actualTask = taskRepository.findById(task.getId()).get();
+        assertThat(actualTask.isDone()).isTrue();
+        assertThat(updateResult).isTrue();
+    }
+
+    @Test
+    public void whenCompleteNotExistThenGetFalse() {
+        var updateResult = taskRepository.complete(0);
+        assertThat(updateResult).isFalse();
     }
 
 }

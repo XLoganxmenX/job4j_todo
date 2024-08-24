@@ -4,3 +4,5 @@ target
 /.idea/
 misc.xml
 vcs.xml
+testdb.mv.db
+testdb.trace.db

@@ -23,13 +23,13 @@ public class SimpleTaskService implements TaskService {
     }
 
     @Override
-    public void update(Task task) {
-        taskRepository.update(task);
+    public boolean update(Task task) {
+        return taskRepository.update(task);
     }
 
     @Override
-    public void delete(int id) {
-        taskRepository.delete(id);
+    public boolean delete(int id) {
+        return taskRepository.delete(id);
     }
 
     @Override
@@ -55,5 +55,10 @@ public class SimpleTaskService implements TaskService {
     @Override
     public List<ListPageTaskDto> findTasksDtoByStatus(boolean status) {
         return taskRepository.findByStatus(status).stream().map(taskMapper::getListPageDtoFromTask).toList();
+    }
+
+    @Override
+    public boolean complete(int id) {
+        return taskRepository.complete(id);
     }
 }

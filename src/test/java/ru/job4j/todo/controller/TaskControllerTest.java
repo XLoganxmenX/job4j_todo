@@ -94,20 +94,40 @@ class TaskControllerTest {
     }
 
     @Test
-    public void whenCompleteTaskThenSetDoneTrueAndReturnTaskPage() {
+    public void whenCompleteExistTaskThenReturnTaskPage() {
         var expectedTask = new Task(1, "task1", "task1", LocalDateTime.now(), false);
-        when(taskService.findById(expectedTask.getId())).thenReturn(Optional.of(expectedTask));
+        when(taskService.complete(expectedTask.getId())).thenReturn(true);
         var model = new ConcurrentModel();
-        var view = taskController.deleteTask(expectedTask.getId(), model);
-
-        assertThat(expectedTask.getDone()).isTrue();
+        var view = taskController.completeTask(expectedTask.getId(), model);
         assertThat(view).isEqualTo("redirect:/tasks/1");
     }
 
     @Test
-    public void whenDeleteTaskThenReturnTaskListPage() {
-        var view = taskController.deleteTask(0);
+    public void whenCompleteNotExitsTaskThenReturnErrorMessagePage() {
+        when(taskService.complete(0)).thenReturn(false);
+        var model = new ConcurrentModel();
+        var view = taskController.completeTask(0, model);
+        var actualMessage = model.getAttribute("message");
+
+        assertThat(actualMessage).isEqualTo("Не удалось перевести задачу в статус \"Выполнено\"");
+        assertThat(view).isEqualTo("errors/404");
+    }
+
+    @Test
+    public void whenDeleteExistTaskThenReturnTaskListPage() {
+        when(taskService.delete(1)).thenReturn(true);
+        var view = taskController.deleteTask(1, new ConcurrentModel());
         assertThat(view).isEqualTo("redirect:/tasks");
+    }
+
+    @Test
+    public void whenDeleteNotExistTaskThenReturnErrorMessagePage() {
+        when(taskService.delete(0)).thenReturn(false);
+        var model = new ConcurrentModel();
+        var view = taskController.deleteTask(0, model);
+        var actualMessage = model.getAttribute("message");
+        assertThat(actualMessage).isEqualTo("Не удалось удалить задачу");
+        assertThat(view).isEqualTo("errors/404");
     }
 
     @Test
@@ -116,7 +136,6 @@ class TaskControllerTest {
         when(taskService.findById(expectedTask.getId())).thenReturn(Optional.of(expectedTask));
         var model = new ConcurrentModel();
         var view = taskController.getEditPage(expectedTask.getId(), model);
-
         var actualTask = model.getAttribute("task");
 
         assertThat(actualTask).isEqualTo(expectedTask);
@@ -124,9 +143,22 @@ class TaskControllerTest {
     }
 
     @Test
-    public void whenUpdateTaskThenReturnTaskListPage() {
-        var view = taskController.update(new Task());
+    public void whenUpdateExistTaskThenReturnTaskListPage() {
+        var task = new Task();
+        when(taskService.update(task)).thenReturn(true);
+        var view = taskController.update(task, new ConcurrentModel());
         assertThat(view).isEqualTo("redirect:/tasks");
+    }
+
+    @Test
+    public void whenUpdateNotExistTaskThenReturnErrorMessagePage() {
+        var task = new Task();
+        when(taskService.update(task)).thenReturn(false);
+        var model = new ConcurrentModel();
+        var view = taskController.update(task, model);
+        var actualMessage = model.getAttribute("message");
+        assertThat(actualMessage).isEqualTo("Не удалось обновить задачу");
+        assertThat(view).isEqualTo("errors/404");
     }
 
     @Test

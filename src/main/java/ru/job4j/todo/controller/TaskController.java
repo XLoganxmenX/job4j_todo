@@ -43,21 +43,22 @@ public class TaskController {
     }
 
     @PostMapping("/complete/{id}")
-    public String deleteTask(@PathVariable int id, Model model) {
-        var taskOptional = taskService.findById(id);
-        if (taskOptional.isEmpty()) {
-            model.addAttribute("message", "Задание с указанным идентификатором не найдено");
+    public String completeTask(@PathVariable int id, Model model) {
+        boolean isComplete = taskService.complete(id);
+        if (!isComplete) {
+            model.addAttribute("message", "Не удалось перевести задачу в статус \"Выполнено\"");
             return "errors/404";
         }
-        Task task = taskOptional.get();
-        task.setDone(true);
-        taskService.update(task);
         return "redirect:/tasks/" + id;
     }
 
     @PostMapping("/delete/{id}")
-    public String deleteTask(@PathVariable int id) {
-        taskService.delete(id);
+    public String deleteTask(@PathVariable int id, Model model) {
+        boolean isDelete = taskService.delete(id);
+        if (!isDelete) {
+            model.addAttribute("message", "Не удалось удалить задачу");
+            return "errors/404";
+        }
         return "redirect:/tasks";
     }
 
@@ -73,8 +74,12 @@ public class TaskController {
     }
 
     @PostMapping("/update")
-    public String update(@ModelAttribute Task task) {
-        taskService.update(task);
+    public String update(@ModelAttribute Task task, Model model) {
+        boolean isUpdate = taskService.update(task);
+        if (!isUpdate) {
+            model.addAttribute("message", "Не удалось обновить задачу");
+            return "errors/404";
+        }
         return "redirect:/tasks";
     }
 
