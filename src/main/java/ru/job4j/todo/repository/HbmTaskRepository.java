@@ -37,10 +37,6 @@ public class HbmTaskRepository implements TaskRepository {
         boolean isUpdated = false;
         try {
             session.beginTransaction();
-            if (session.get(Task.class, task.getId()) == null) {
-                return false;
-            }
-            session.clear();
             session.update(task);
             session.getTransaction().commit();
             isUpdated = true;
@@ -58,10 +54,6 @@ public class HbmTaskRepository implements TaskRepository {
         boolean isDeleted = false;
         try {
             session.beginTransaction();
-            if (session.get(Task.class, id) == null) {
-                return false;
-            }
-            session.clear();
             session.createQuery("DELETE Task WHERE id = :fId")
                     .setParameter("fId", id)
                     .executeUpdate();
@@ -134,10 +126,6 @@ public class HbmTaskRepository implements TaskRepository {
         boolean isComplete = false;
         try {
             session.beginTransaction();
-            if (session.get(Task.class, id) == null) {
-                return false;
-            }
-            session.clear();
             session.createQuery("UPDATE Task SET done = true WHERE id = :fId")
                     .setParameter("fId", id)
                     .executeUpdate();

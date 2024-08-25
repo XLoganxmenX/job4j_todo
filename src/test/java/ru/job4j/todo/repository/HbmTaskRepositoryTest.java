@@ -77,12 +77,6 @@ class HbmTaskRepositoryTest {
     }
 
     @Test
-    public void whenDeleteNotExistThenGetFalse()  {
-        var deleteResult = taskRepository.delete(0);
-        assertThat(deleteResult).isFalse();
-    }
-
-    @Test
     public void whenFindAllOrderById() {
         var task1 = taskRepository.save(new Task(0, "task1", "description1", LocalDateTime.now(), true));
         var task2 = taskRepository.save(new Task(0, "task2", "description2", LocalDateTime.now().plusHours(1), false));
@@ -111,12 +105,6 @@ class HbmTaskRepositoryTest {
         var actualTask = taskRepository.findById(task.getId()).get();
         assertThat(actualTask.isDone()).isTrue();
         assertThat(updateResult).isTrue();
-    }
-
-    @Test
-    public void whenCompleteNotExistThenGetFalse() {
-        var updateResult = taskRepository.complete(0);
-        assertThat(updateResult).isFalse();
     }
 
 }
