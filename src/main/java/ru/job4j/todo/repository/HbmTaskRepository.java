@@ -37,9 +37,15 @@ public class HbmTaskRepository implements TaskRepository {
         boolean isUpdated = false;
         try {
             session.beginTransaction();
-            session.update(task);
+            var affectedRows = session.createQuery(
+                    "UPDATE Task SET description = :fDescription, created = :fCreated, done = :fDone"
+                    )
+                    .setParameter("fDescription", task.getDescription())
+                    .setParameter("fCreated", task.getCreated())
+                    .setParameter("fDone", task.isDone())
+                    .executeUpdate();
             session.getTransaction().commit();
-            isUpdated = true;
+            isUpdated = affectedRows > 0;
         } catch (Exception e) {
             session.getTransaction().rollback();
         } finally {
@@ -54,11 +60,11 @@ public class HbmTaskRepository implements TaskRepository {
         boolean isDeleted = false;
         try {
             session.beginTransaction();
-            session.createQuery("DELETE Task WHERE id = :fId")
+            var affectedRows = session.createQuery("DELETE Task WHERE id = :fId")
                     .setParameter("fId", id)
                     .executeUpdate();
             session.getTransaction().commit();
-            isDeleted = true;
+            isDeleted = affectedRows > 0;
         } catch (Exception e) {
             session.getTransaction().rollback();
         } finally {
@@ -126,11 +132,11 @@ public class HbmTaskRepository implements TaskRepository {
         boolean isComplete = false;
         try {
             session.beginTransaction();
-            session.createQuery("UPDATE Task SET done = true WHERE id = :fId")
+            var affectedRows = session.createQuery("UPDATE Task SET done = true WHERE id = :fId")
                     .setParameter("fId", id)
                     .executeUpdate();
             session.getTransaction().commit();
-            isComplete = true;
+            isComplete = affectedRows > 0;
         } catch (Exception e) {
             session.getTransaction().rollback();
         } finally {
