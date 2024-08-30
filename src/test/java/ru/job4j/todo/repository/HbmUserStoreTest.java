@@ -10,6 +10,7 @@ import org.springframework.context.annotation.AnnotationConfigApplicationContext
 import ru.job4j.todo.Main;
 import ru.job4j.todo.model.User;
 
+import java.util.Map;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
@@ -17,27 +18,19 @@ import static org.assertj.core.api.Assertions.*;
 class HbmUserStoreTest {
 
     private static UserStore userStore;
-    private static SessionFactory sf;
+    private static CrudRepository crudRepository;
 
     @BeforeAll
     public static void init() {
         ApplicationContext context = new AnnotationConfigApplicationContext(Main.class);
-        sf = context.getBean(SessionFactory.class);
-        userStore = new HbmUserStore(sf);
+        SessionFactory sf = context.getBean(SessionFactory.class);
+        crudRepository = new CrudRepository(sf);
+        userStore = new HbmUserStore(crudRepository);
     }
 
     @BeforeEach
-    public void deleteAll() {
-        Session session = sf.openSession();
-        try {
-            session.beginTransaction();
-            session.createQuery("DELETE User").executeUpdate();
-            session.getTransaction().commit();
-        } catch (Exception e) {
-            session.getTransaction().rollback();
-        } finally {
-            session.close();
-        }
+    public void deleteAll() throws Exception {
+        crudRepository.run("DELETE User", Map.of());
     }
 
     @Test

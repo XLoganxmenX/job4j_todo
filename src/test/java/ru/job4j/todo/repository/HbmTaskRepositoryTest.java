@@ -8,20 +8,21 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import ru.job4j.todo.Main;
 import ru.job4j.todo.model.Task;
-import static org.assertj.core.api.Assertions.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-class HbmTaskRepositoryTest {
+import static org.assertj.core.api.Assertions.assertThat;
 
+class HbmTaskRepositoryTest {
     private static TaskRepository taskRepository;
 
     @BeforeAll
     public static void init() {
         ApplicationContext context = new AnnotationConfigApplicationContext(Main.class);
         SessionFactory sf = context.getBean(SessionFactory.class);
-        taskRepository = new HbmTaskRepository(sf);
+        var crudRepository = new CrudRepository(sf);
+        taskRepository = new HbmTaskRepository(crudRepository);
     }
 
     @AfterEach
@@ -118,5 +119,4 @@ class HbmTaskRepositoryTest {
         var updateResult = taskRepository.complete(0);
         assertThat(updateResult).isFalse();
     }
-
 }

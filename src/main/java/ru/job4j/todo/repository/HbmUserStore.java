@@ -2,50 +2,42 @@ package ru.job4j.todo.repository;
 
 import lombok.AllArgsConstructor;
 import org.hibernate.Session;
-import org.hibernate.SessionFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 import ru.job4j.todo.model.User;
 
+import java.util.Map;
 import java.util.Optional;
+import java.util.function.Consumer;
 
 @Repository
 @AllArgsConstructor
 public class HbmUserStore implements UserStore {
-    private final SessionFactory sf;
+    private static final Logger LOGGER = LoggerFactory.getLogger(HbmUserStore.class);
+    private final CrudRepository crudRepository;
 
     @Override
     public Optional<User> save(User user) {
-        Optional<User> returnUser = Optional.empty();
-        Session session = sf.openSession();
         try {
-            session.beginTransaction();
-            session.save(user);
-            session.getTransaction().commit();
-            returnUser = Optional.of(user);
+            crudRepository.run((Consumer<Session>) session -> session.persist(user));
+            return Optional.of(user);
         } catch (Exception e) {
-            session.getTransaction().rollback();
-        } finally {
-            session.close();
+            LOGGER.error("Exception on save User", e);
+            return Optional.empty();
         }
-        return returnUser;
     }
 
     @Override
     public Optional<User> findByLoginAndPassword(String login, String password) {
-        Optional<User> returnUser = Optional.empty();
-        Session session = sf.openSession();
         try {
-            session.beginTransaction();
-            var query = session.createQuery("FROM User WHERE login = :fLogin AND password = :fPassword", User.class)
-                    .setParameter("fLogin", login)
-                    .setParameter("fPassword", password);
-            returnUser = query.uniqueResultOptional();
-            session.getTransaction().commit();
+            return crudRepository.optional("FROM User WHERE login = :fLogin AND password = :fPassword", User.class,
+                    Map.of("fLogin", login,
+                            "fPassword", password
+                    ));
         } catch (Exception e) {
-            session.getTransaction().rollback();
-        } finally {
-            session.close();
+            LOGGER.error("Exception on find User ByLoginAndPassword", e);
+            return Optional.empty();
         }
-        return returnUser;
     }
 }
