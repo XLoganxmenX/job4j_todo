@@ -40,8 +40,8 @@ public class HbmTaskRepository implements TaskRepository {
                     ));
         } catch (Exception e) {
             LOGGER.error("Exception on update Task", e);
-            return false;
         }
+        return false;
     }
 
     @Override
@@ -50,8 +50,8 @@ public class HbmTaskRepository implements TaskRepository {
             return crudRepository.run("DELETE Task WHERE id = :fId", Map.of("fId", id));
         } catch (Exception e) {
             LOGGER.error("Exception on delete Task", e);
-            return false;
         }
+        return false;
     }
 
     @Override
@@ -60,8 +60,8 @@ public class HbmTaskRepository implements TaskRepository {
             return crudRepository.optional("from Task WHERE id = :fId",  Task.class, Map.of("fId", id));
         } catch (Exception e) {
             LOGGER.error("Exception on find Task ById", e);
-            return Optional.empty();
         }
+        return Optional.empty();
     }
 
     @Override
@@ -70,8 +70,8 @@ public class HbmTaskRepository implements TaskRepository {
             return crudRepository.query("from Task ORDER BY id", Task.class);
         } catch (Exception e) {
             LOGGER.error("Exception on findAll Task orderById", e);
-            return Collections.emptyList();
         }
+        return Collections.emptyList();
     }
 
     @Override
@@ -80,8 +80,8 @@ public class HbmTaskRepository implements TaskRepository {
             return crudRepository.query("from Task WHERE done = :fDone", Task.class, Map.of("fDone", status));
         } catch (Exception e) {
             LOGGER.error("Exception on find Task ByStatus", e);
-            return Collections.emptyList();
         }
+        return Collections.emptyList();
     }
 
     @Override
@@ -90,7 +90,7 @@ public class HbmTaskRepository implements TaskRepository {
             return crudRepository.run("UPDATE Task SET done = true WHERE id = :fId", Map.of("fId", id));
         } catch (Exception e) {
             LOGGER.error("Exception on complete Task", e);
-            return false;
         }
+        return false;
     }
 }

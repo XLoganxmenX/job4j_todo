@@ -24,8 +24,8 @@ public class HbmUserStore implements UserStore {
             return Optional.of(user);
         } catch (Exception e) {
             LOGGER.error("Exception on save User", e);
-            return Optional.empty();
         }
+        return Optional.empty();
     }
 
     @Override
@@ -37,7 +37,7 @@ public class HbmUserStore implements UserStore {
                     ));
         } catch (Exception e) {
             LOGGER.error("Exception on find User ByLoginAndPassword", e);
-            return Optional.empty();
         }
+        return Optional.empty();
     }
 }
