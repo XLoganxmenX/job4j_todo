@@ -1,5 +1,6 @@
 package ru.job4j.todo.repository;
 
+import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
@@ -8,32 +9,39 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import ru.job4j.todo.Main;
 import ru.job4j.todo.model.Task;
+import ru.job4j.todo.model.User;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Consumer;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 class HbmTaskRepositoryTest {
     private static TaskRepository taskRepository;
+    private static CrudRepository crudRepository;
 
     @BeforeAll
     public static void init() {
         ApplicationContext context = new AnnotationConfigApplicationContext(Main.class);
         SessionFactory sf = context.getBean(SessionFactory.class);
-        var crudRepository = new CrudRepository(sf);
+        crudRepository = new CrudRepository(sf);
         taskRepository = new HbmTaskRepository(crudRepository);
     }
 
     @AfterEach
-    public void deleteAll() {
+    public void deleteAll() throws Exception {
         taskRepository.findAllOrderById().forEach(task -> taskRepository.delete(task.getId()));
+        crudRepository.run("DELETE User", Map.of());
     }
 
     @Test
-    public void whenSaveTaskAndFindById() {
+    public void whenSaveTaskAndFindById() throws Exception {
+        var user = new User(0, "Test", "login", "password");
+        crudRepository.run((Consumer<Session>) session -> session.persist(user));
         var task = taskRepository.save(
-                new Task(0, "task", "description", LocalDateTime.now(), true)
+                new Task(0, "task", "description", LocalDateTime.now(), true, user)
         );
         var savedTask = taskRepository.findById(task.getId()).get();
         assertThat(task).isEqualTo(savedTask);
@@ -46,17 +54,31 @@ class HbmTaskRepositoryTest {
     }
 
     @Test
+    public void whenSaveTaskAndFindByIdThenUserEqual() throws Exception {
+        var expectedUser = new User(0, "Test", "login", "password");
+        crudRepository.run((Consumer<Session>) session -> session.persist(expectedUser));
+        var task = taskRepository.save(
+                new Task(0, "task", "description", LocalDateTime.now(), true, expectedUser)
+        );
+        var savedTask = taskRepository.findById(task.getId()).get();
+        var actualUser = savedTask.getUser();
+        assertThat(actualUser).usingRecursiveComparison().isEqualTo(expectedUser);
+    }
+
+    @Test
     public void whenUpdateNotExistThenGetFalse() {
         var updateResult = taskRepository.update(
-                new Task(0, "task", "description", LocalDateTime.now(), true)
+                new Task(0, "task", "description", LocalDateTime.now(), true, new User())
         );
         assertThat(updateResult).isFalse();
     }
 
     @Test
-    public void whenUpdateAndThenGetSame() {
+    public void whenUpdateAndThenGetSame() throws Exception {
+        var user = new User(0, "Test", "login", "password");
+        crudRepository.run((Consumer<Session>) session -> session.persist(user));
         var task = taskRepository.save(
-                new Task(0, "task", "description", LocalDateTime.now(), true)
+                new Task(0, "task", "description", LocalDateTime.now(), true, user)
         );
         task.setDescription("new task");
         task.setDone(false);
@@ -67,9 +89,11 @@ class HbmTaskRepositoryTest {
     }
 
     @Test
-    public void whenDeleteThenNotFound()  {
+    public void whenDeleteThenNotFound() throws Exception {
+        var user = new User(0, "Test", "login", "password");
+        crudRepository.run((Consumer<Session>) session -> session.persist(user));
         var task = taskRepository.save(
-                new Task(0, "task", "description", LocalDateTime.now(), true)
+                new Task(0, "task", "description", LocalDateTime.now(), true, user)
         );
         var deleteResult = taskRepository.delete(task.getId());
         var actualTask = taskRepository.findById(task.getId());
@@ -84,30 +108,41 @@ class HbmTaskRepositoryTest {
     }
 
     @Test
-    public void whenFindAllOrderById() {
-        var task1 = taskRepository.save(new Task(0, "task1", "description1", LocalDateTime.now(), true));
-        var task2 = taskRepository.save(new Task(0, "task2", "description2", LocalDateTime.now().plusHours(1), false));
-        var task3 = taskRepository.save(new Task(0, "task3", "description3", LocalDateTime.now().plusHours(2), true));
+    public void whenFindAllOrderById() throws Exception {
+        var user = new User(0, "Test", "login", "password");
+        crudRepository.run((Consumer<Session>) session -> session.persist(user));
+        var task1 = taskRepository.save(
+                new Task(0, "task1", "description1", LocalDateTime.now(), true, user));
+        var task2 = taskRepository.save(
+                new Task(0, "task2", "description2", LocalDateTime.now().plusHours(1), false, user));
+        var task3 = taskRepository.save(
+                new Task(0, "task3", "description3", LocalDateTime.now().plusHours(2), true, user));
         var expectedList = List.of(task1, task2, task3);
         var actualList = taskRepository.findAllOrderById();
         assertThat(actualList).containsExactlyElementsOf(expectedList);
     }
 
     @Test
-    public void whenFindByStatus() {
-        var task1 = taskRepository.save(new Task(0, "task1", "description1", LocalDateTime.now(), true));
-        var task2 = taskRepository.save(new Task(0, "task2", "description1", LocalDateTime.now().plusHours(1), false));
-        var task3 = taskRepository.save(new Task(0, "task3", "description1", LocalDateTime.now().plusHours(2), true));
+    public void whenFindByStatus() throws Exception {
+        var user = new User(0, "Test", "login", "password");
+        crudRepository.run((Consumer<Session>) session -> session.persist(user));
+        var task1 = taskRepository.save(
+                new Task(0, "task1", "description1", LocalDateTime.now(), true, user));
+        var task2 = taskRepository.save(
+                new Task(0, "task2", "description1", LocalDateTime.now().plusHours(1), false, user));
+        var task3 = taskRepository.save(
+                new Task(0, "task3", "description1", LocalDateTime.now().plusHours(2), true, user));
         var expectedList = List.of(task1, task3);
         var actualList = taskRepository.findByStatus(true);
         assertThat(actualList).isEqualTo(expectedList);
     }
 
     @Test
-    public void whenCompleteExistThenTaskDoneTrue() {
+    public void whenCompleteExistThenTaskDoneTrue() throws Exception {
+        var user = new User(0, "Test", "login", "password");
+        crudRepository.run((Consumer<Session>) session -> session.persist(user));
         var task = taskRepository.save(
-                new Task(0, "task", "description", LocalDateTime.now(), false)
-        );
+                new Task(0, "task", "description", LocalDateTime.now(), false, user));
         var updateResult = taskRepository.complete(task.getId());
         var actualTask = taskRepository.findById(task.getId()).get();
         assertThat(actualTask.isDone()).isTrue();

@@ -2,9 +2,11 @@ package ru.job4j.todo.controller;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.springframework.mock.web.MockHttpSession;
 import org.springframework.ui.ConcurrentModel;
 import ru.job4j.todo.dto.ListPageTaskDto;
 import ru.job4j.todo.model.Task;
+import ru.job4j.todo.model.User;
 import ru.job4j.todo.service.TaskService;
 
 import java.time.LocalDateTime;
@@ -28,8 +30,8 @@ class TaskControllerTest {
     @Test
     public void whenGetAllThenReturnPageWithTasksDto() {
         var expectedTasks = List.of(
-                new ListPageTaskDto(1, "task1", LocalDateTime.now(), true),
-                new ListPageTaskDto(2, "task2", LocalDateTime.now().plusHours(1), false)
+                new ListPageTaskDto(1, "task1", LocalDateTime.now(), true, "user"),
+                new ListPageTaskDto(2, "task2", LocalDateTime.now().plusHours(1), false, "user")
         );
         when(taskService.findAllTaskDtoOrderById()).thenReturn(expectedTasks);
         var model = new ConcurrentModel();
@@ -43,8 +45,8 @@ class TaskControllerTest {
     @Test
     public void whenGetDoneTaskThenReturnPageWithDoneTasks() {
         var expectedTasks = List.of(
-                new ListPageTaskDto(1, "task1", LocalDateTime.now(), true),
-                new ListPageTaskDto(2, "task2", LocalDateTime.now().plusHours(1), true)
+                new ListPageTaskDto(1, "task1", LocalDateTime.now(), true, "user"),
+                new ListPageTaskDto(2, "task2", LocalDateTime.now().plusHours(1), true, "user")
         );
         when(taskService.findTasksDtoByStatus(true)).thenReturn(expectedTasks);
         var model = new ConcurrentModel();
@@ -58,8 +60,8 @@ class TaskControllerTest {
     @Test
     public void whenGetNewTaskThenReturnPageWithNewTasks() {
         var expectedTasks = List.of(
-                new ListPageTaskDto(1, "task1", LocalDateTime.now(), false),
-                new ListPageTaskDto(2, "task2", LocalDateTime.now().plusHours(1), false)
+                new ListPageTaskDto(1, "task1", LocalDateTime.now(), false, "user"),
+                new ListPageTaskDto(2, "task2", LocalDateTime.now().plusHours(1), false, "user")
         );
         when(taskService.findTasksDtoByStatus(false)).thenReturn(expectedTasks);
         var model = new ConcurrentModel();
@@ -72,7 +74,7 @@ class TaskControllerTest {
 
     @Test
     public void whenGetByIdExistTaskThenReturnTaskPage() {
-        var expectedTask = new Task(1, "task1", "task1", LocalDateTime.now(), false);
+        var expectedTask = new Task(1, "task1", "task1", LocalDateTime.now(), false, new User());
         when(taskService.findById(expectedTask.getId())).thenReturn(Optional.of(expectedTask));
         var model = new ConcurrentModel();
         var view = taskController.getById(model, expectedTask.getId());
@@ -95,7 +97,7 @@ class TaskControllerTest {
 
     @Test
     public void whenCompleteExistTaskThenReturnTaskPage() {
-        var expectedTask = new Task(1, "task1", "task1", LocalDateTime.now(), false);
+        var expectedTask = new Task(1, "task1", "task1", LocalDateTime.now(), false, new User());
         when(taskService.complete(expectedTask.getId())).thenReturn(true);
         var model = new ConcurrentModel();
         var view = taskController.completeTask(expectedTask.getId(), model);
@@ -132,7 +134,7 @@ class TaskControllerTest {
 
     @Test
     public void whenGetEditPageThenReturnEditPageWithTask() {
-        var expectedTask = new Task(1, "task1", "task1", LocalDateTime.now(), false);
+        var expectedTask = new Task(1, "task1", "task1", LocalDateTime.now(), false, new User());
         when(taskService.findById(expectedTask.getId())).thenReturn(Optional.of(expectedTask));
         var model = new ConcurrentModel();
         var view = taskController.getEditPage(expectedTask.getId(), model);
@@ -169,7 +171,8 @@ class TaskControllerTest {
 
     @Test
     public void whenSaveThenReturnTaskListPage() {
-        var view = taskController.save(new Task());
+        var view = taskController.save(new Task(), new MockHttpSession());
         assertThat(view).isEqualTo("redirect:/tasks");
     }
+
 }

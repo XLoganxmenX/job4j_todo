@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import ru.job4j.todo.dto.ListPageTaskDto;
 import ru.job4j.todo.mappers.TaskMapper;
 import ru.job4j.todo.model.Task;
+import ru.job4j.todo.model.User;
 import ru.job4j.todo.repository.TaskRepository;
 
 import java.util.List;
@@ -18,7 +19,8 @@ public class SimpleTaskService implements TaskService {
     private final TaskMapper taskMapper;
 
     @Override
-    public Task save(Task task) {
+    public Task save(Task task, User user) {
+        task.setUser(user);
         return taskRepository.save(task);
     }
 

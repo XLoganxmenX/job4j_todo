@@ -8,8 +8,6 @@ import ru.job4j.todo.model.Task;
 @Mapper(componentModel = "spring")
 public interface TaskMapper {
     @Mapping(source = "id", target = "id")
+    @Mapping(source = "user.name", target = "userName")
     ListPageTaskDto getListPageDtoFromTask(Task task);
-
-    @Mapping(source = "id", target = "id")
-    Task getTaskFromListPageDto(ListPageTaskDto taskDto);
 }
