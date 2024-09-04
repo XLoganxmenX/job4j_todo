@@ -36,6 +36,7 @@
                 <tr>
                     <th scope="col">Название</th>
                     <th scope="col">Дата создания</th>
+                    <th scope="col">Приоритет</th>
                     <th scope="col">Состояние</th>
                     <th scope="col">Пользователь</th>
                 </tr>
@@ -44,6 +45,7 @@
                 <tr th:each="taskDto: ${tasksDto}">
                     <td><a th:text="${taskDto.title}" th:href="@{tasks/{taskId}(taskId=${taskDto.id})}"></a></td>
                     <td th:text="${#temporals.format(taskDto.created, 'hh:mm:ss dd-MM-yyyy')}" />
+                    <td th:text="${taskDto.priorityName}" />
                     <td th:text="${taskDto.done ? 'Выполнено' : 'Новое'}" />
                     <td th:text="${taskDto.userName}" />
                 </tr>

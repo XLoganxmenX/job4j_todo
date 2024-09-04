@@ -9,4 +9,7 @@
     <include file="scripts/002_ddl_alter_table_tasks_add_title.sql" relativeToChangelogFile="true"/>
     <include file="scripts/003_ddl_create_table_users.sql" relativeToChangelogFile="true"/>
     <include file="scripts/004_ddl_alter_table_tasks_add_userId.sql" relativeToChangelogFile="true"/>
+    <include file="scripts/005_ddl_create_table_priorities.sql" relativeToChangelogFile="true"/>
+    <include file="scripts/006_dml_insert_priorities.sql" relativeToChangelogFile="true"/>
+    <include file="scripts/007_ddl_alter_table_tasks.sql" relativeToChangelogFile="true"/>
 </databaseChangeLog>

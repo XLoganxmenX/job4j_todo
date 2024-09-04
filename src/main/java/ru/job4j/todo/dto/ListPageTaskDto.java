@@ -14,4 +14,5 @@ public class ListPageTaskDto {
     private LocalDateTime created;
     private boolean done;
     private String userName;
+    private String priorityName;
 }

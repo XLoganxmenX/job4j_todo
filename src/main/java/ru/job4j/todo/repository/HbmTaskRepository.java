@@ -57,7 +57,8 @@ public class HbmTaskRepository implements TaskRepository {
     @Override
     public Optional<Task> findById(int id) {
         try {
-            return crudRepository.optional("from Task WHERE id = :fId",  Task.class, Map.of("fId", id));
+            return crudRepository.optional(
+                    "from Task t JOIN FETCH t.priority WHERE t.id = :fId",  Task.class, Map.of("fId", id));
         } catch (Exception e) {
             LOGGER.error("Exception on find Task ById", e);
         }
@@ -67,7 +68,7 @@ public class HbmTaskRepository implements TaskRepository {
     @Override
     public List<Task> findAllOrderById() {
         try {
-            return crudRepository.query("from Task ORDER BY id", Task.class);
+            return crudRepository.query("from Task t JOIN FETCH t.priority ORDER BY t.id", Task.class);
         } catch (Exception e) {
             LOGGER.error("Exception on findAll Task orderById", e);
         }
@@ -77,7 +78,8 @@ public class HbmTaskRepository implements TaskRepository {
     @Override
     public List<Task> findByStatus(boolean status) {
         try {
-            return crudRepository.query("from Task WHERE done = :fDone", Task.class, Map.of("fDone", status));
+            return crudRepository.query(
+                    "from Task t JOIN FETCH t.priority WHERE t.done = :fDone ", Task.class, Map.of("fDone", status));
         } catch (Exception e) {
             LOGGER.error("Exception on find Task ByStatus", e);
         }

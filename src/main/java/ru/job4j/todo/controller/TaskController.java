@@ -6,6 +6,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ru.job4j.todo.model.Task;
 import ru.job4j.todo.model.User;
+import ru.job4j.todo.service.PriorityService;
 import ru.job4j.todo.service.TaskService;
 
 import javax.servlet.http.HttpSession;
@@ -15,6 +16,7 @@ import javax.servlet.http.HttpSession;
 @AllArgsConstructor
 public class TaskController {
     private final TaskService taskService;
+    private final PriorityService priorityService;
 
     @GetMapping
     public String getAll(Model model) {
@@ -87,14 +89,16 @@ public class TaskController {
     }
 
     @GetMapping("/create")
-    public String getCreatePage() {
+    public String getCreatePage(Model model) {
+        model.addAttribute("priorities", priorityService.findAll());
         return "tasks/create";
     }
 
     @PostMapping("/save")
-    public String save(@ModelAttribute Task task, HttpSession session) {
+    public String save(@ModelAttribute Task task, @RequestParam("priorId") int priorityId,
+                       HttpSession session) {
         User user = (User) session.getAttribute("user");
-        taskService.save(task, user);
+        taskService.save(task, user, priorityId);
         return "redirect:/tasks";
     }
 }

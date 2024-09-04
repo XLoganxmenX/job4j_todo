@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import ru.job4j.todo.dto.ListPageTaskDto;
 import ru.job4j.todo.mappers.TaskMapper;
+import ru.job4j.todo.model.Priority;
 import ru.job4j.todo.model.Task;
 import ru.job4j.todo.model.User;
 import ru.job4j.todo.repository.TaskRepository;
@@ -16,11 +17,14 @@ import java.util.Optional;
 public class SimpleTaskService implements TaskService {
 
     private final TaskRepository taskRepository;
+    private final PriorityService priorityService;
     private final TaskMapper taskMapper;
 
     @Override
-    public Task save(Task task, User user) {
+    public Task save(Task task, User user, int priorityId) {
+        Priority priority = priorityService.findById(priorityId).get();
         task.setUser(user);
+        task.setPriority(priority);
         return taskRepository.save(task);
     }
 

@@ -9,5 +9,6 @@ import ru.job4j.todo.model.Task;
 public interface TaskMapper {
     @Mapping(source = "id", target = "id")
     @Mapping(source = "user.name", target = "userName")
+    @Mapping(source = "priority.name", target = "priorityName")
     ListPageTaskDto getListPageDtoFromTask(Task task);
 }
