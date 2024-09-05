@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface TaskService {
-    Task save(Task task, User user, int priorityId);
+    Task save(Task task, User user);
 
     boolean update(Task task);
 

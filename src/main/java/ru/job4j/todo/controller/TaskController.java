@@ -95,10 +95,9 @@ public class TaskController {
     }
 
     @PostMapping("/save")
-    public String save(@ModelAttribute Task task, @RequestParam("priorId") int priorityId,
-                       HttpSession session) {
+    public String save(@ModelAttribute Task task, HttpSession session) {
         User user = (User) session.getAttribute("user");
-        taskService.save(task, user, priorityId);
+        taskService.save(task, user);
         return "redirect:/tasks";
     }
 }

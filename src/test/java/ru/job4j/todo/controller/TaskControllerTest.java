@@ -184,7 +184,7 @@ class TaskControllerTest {
 
     @Test
     public void whenSaveThenReturnTaskListPage() {
-        var view = taskController.save(new Task(), 0, new MockHttpSession());
+        var view = taskController.save(new Task(), new MockHttpSession());
         assertThat(view).isEqualTo("redirect:/tasks");
     }
 

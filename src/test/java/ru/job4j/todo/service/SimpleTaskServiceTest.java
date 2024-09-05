@@ -34,7 +34,7 @@ class SimpleTaskServiceTest {
         var task = new Task(1, "task", "description", LocalDateTime.now(), true, new User(), new Priority());
         when(taskRepository.save(task)).thenReturn(task);
         when(priorityService.findById(0)).thenReturn(Optional.of(new Priority()));
-        var actualTask = taskService.save(task, new User(), 0);
+        var actualTask = taskService.save(task, new User());
         assertThat(actualTask).isEqualTo(task);
     }
 

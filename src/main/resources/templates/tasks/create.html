@@ -31,7 +31,7 @@
 
             <div class="row mb-3">
                 <label for="priority"><b>Приоритет задачи</b></label>
-                <select class="form-control" id="priority" name="priorId">
+                <select class="form-control" id="priority" name="priority.id">
                     <option th:each="priority : ${priorities}" th:value="${priority.id}" th:text="${priority.name}"></option>
                 </select>
             </div>

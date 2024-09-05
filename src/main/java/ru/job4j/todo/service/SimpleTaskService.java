@@ -21,10 +21,8 @@ public class SimpleTaskService implements TaskService {
     private final TaskMapper taskMapper;
 
     @Override
-    public Task save(Task task, User user, int priorityId) {
-        Priority priority = priorityService.findById(priorityId).get();
+    public Task save(Task task, User user) {
         task.setUser(user);
-        task.setPriority(priority);
         return taskRepository.save(task);
     }
 
