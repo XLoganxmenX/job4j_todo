@@ -37,6 +37,13 @@
             </div>
 
             <div class="row mb-3">
+                <label for="category"><b>Категория</b></label>
+                <select class="form-control" id="category" name="categoriesId" multiple required>
+                    <option th:each="category : ${categories}" th:value="${category.id}" th:text="${category.name}"></option>
+                </select>
+            </div>
+
+            <div class="row mb-3">
                 <label for="description" class="form-label"><b>Описание</b></label>
                 <textarea class="form-control" id="description" name="description" rows="12" placeholder="Полностью опишите задачу" required></textarea>
             </div>

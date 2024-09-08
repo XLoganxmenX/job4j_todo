@@ -5,6 +5,7 @@ import lombok.Data;
 
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -15,4 +16,5 @@ public class ListPageTaskDto {
     private boolean done;
     private String userName;
     private String priorityName;
+    private List<String> categories;
 }
