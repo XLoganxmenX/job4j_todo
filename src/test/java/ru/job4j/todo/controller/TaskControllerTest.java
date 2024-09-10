@@ -37,6 +37,7 @@ class TaskControllerTest {
 
     @Test
     public void whenGetAllThenReturnPageWithTasksDto() {
+        var user = new User(0, "Test", "login", "password", "UTC");
         var expectedTasks = List.of(
                 new ListPageTaskDto(1, "task1", LocalDateTime.now(), true,
                         "user", "priority", List.of("category")),
@@ -44,8 +45,10 @@ class TaskControllerTest {
                         "user", "priority", List.of("category"))
         );
         when(taskService.findAllTaskDtoOrderById()).thenReturn(expectedTasks);
+        var session = new MockHttpSession();
+        session.setAttribute("user", user);
         var model = new ConcurrentModel();
-        var view = taskController.getAll(model);
+        var view = taskController.getAll(model, session);
         var actualTasks = model.getAttribute("tasksDto");
 
         assertThat(actualTasks).isEqualTo(expectedTasks);

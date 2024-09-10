@@ -28,7 +28,7 @@ class UserControllerTest {
 
     @Test
     public void whenRequestRegistrationPage() {
-        var view = userController.getRegistrationPage();
+        var view = userController.getRegistrationPage(new ConcurrentModel());
         assertThat(view).isEqualTo("users/register");
     }
 
@@ -65,7 +65,7 @@ class UserControllerTest {
 
     @Test
     public void whenLoginIsSuccess() {
-        User user = new User(1, "test", "test", "password");
+        User user = new User(1, "test", "test", "password", "UTC+3");
         when(userService.findByLoginAndPassword(user.getLogin(), user.getPassword())).thenReturn(Optional.of(user));
 
         var model = new ConcurrentModel();
@@ -81,7 +81,7 @@ class UserControllerTest {
     @Test
     public void whenLoginIncorrectThenReturnLoginPageAndError() {
         String expectedErrorMessage = "Почта или пароль введены неверно";
-        User user = new User(1, "test", "test", "password");
+        User user = new User(1, "test", "test", "password", "UTC+3");
         when(userService.findByLoginAndPassword(user.getLogin(), user.getPassword())).thenReturn(Optional.empty());
 
         var model = new ConcurrentModel();

@@ -23,7 +23,7 @@ class SimpleUserServiceTest {
 
     @Test
     public void whenSaveThenGetUserOptional() {
-        var user = new User(0, "Test", "login", "password");
+        var user = new User(0, "Test", "login", "password", "UTC+3");
         when(userStore.save(user)).thenReturn(Optional.of(user));
         var actualUserOptional = userService.save(user);
         assertThat(actualUserOptional).usingRecursiveComparison().isEqualTo(Optional.of(user));
@@ -39,7 +39,7 @@ class SimpleUserServiceTest {
 
     @Test
     public void whenFindByLoginAndPassThenGetUserOptional() {
-        var user = new User(0, "Test", "login", "password");
+        var user = new User(0, "Test", "login", "password", "UTC+3");
         when(userStore.findByLoginAndPassword(user.getLogin(), user.getPassword()))
                 .thenReturn(Optional.of(user));
         var actualUserOptional = userService.findByLoginAndPassword(user.getLogin(), user.getPassword());
@@ -48,7 +48,7 @@ class SimpleUserServiceTest {
 
     @Test
     public void whenFindByLoginAndPassIncorrectUserThenEmptyOptional() {
-        var user = new User(0, "Incorrect", "Incorrect", "Incorrect");
+        var user = new User(0, "Incorrect", "Incorrect", "Incorrect", "UTC+3");
         when(userStore.findByLoginAndPassword(user.getLogin(), user.getPassword()))
                 .thenReturn(Optional.empty());
         var actualUserOptional = userService.findByLoginAndPassword(user.getLogin(), user.getPassword());

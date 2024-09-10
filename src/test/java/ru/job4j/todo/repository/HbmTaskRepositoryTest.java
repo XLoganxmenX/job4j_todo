@@ -42,7 +42,7 @@ class HbmTaskRepositoryTest {
 
     @Test
     public void whenSaveTaskAndFindById() throws Exception {
-        var user = new User(0, "Test", "login", "password");
+        var user = new User(0, "Test", "login", "password", "UTC+3");
         var priority = new Priority(0, "Test", 1);
         var category = new Category(0, "category");
         crudRepository.run((Consumer<Session>) session -> session.persist(category));
@@ -64,7 +64,7 @@ class HbmTaskRepositoryTest {
 
     @Test
     public void whenSaveTaskAndFindByIdThenUserEqual() throws Exception {
-        var expectedUser = new User(0, "Test", "login", "password");
+        var expectedUser = new User(0, "Test", "login", "password", "UTC+3");
         var priority = new Priority(0, "Test", 1);
         var category = new Category(0, "category");
         crudRepository.run((Consumer<Session>) session -> session.persist(category));
@@ -90,7 +90,7 @@ class HbmTaskRepositoryTest {
 
     @Test
     public void whenUpdateAndThenGetSame() throws Exception {
-        var user = new User(0, "Test", "login", "password");
+        var user = new User(0, "Test", "login", "password", "UTC+3");
         var priority = new Priority(0, "Test", 1);
         var category = new Category(0, "category");
         crudRepository.run((Consumer<Session>) session -> session.persist(category));
@@ -111,7 +111,7 @@ class HbmTaskRepositoryTest {
 
     @Test
     public void whenDeleteThenNotFound() throws Exception {
-        var user = new User(0, "Test", "login", "password");
+        var user = new User(0, "Test", "login", "password", "UTC+3");
         var priority = new Priority(0, "Test", 1);
         var category = new Category(0, "category");
         crudRepository.run((Consumer<Session>) session -> session.persist(category));
@@ -135,7 +135,7 @@ class HbmTaskRepositoryTest {
 
     @Test
     public void whenFindAllOrderById() throws Exception {
-        var user = new User(0, "Test", "login", "password");
+        var user = new User(0, "Test", "login", "password", "UTC+3");
         var priority = new Priority(0, "Test", 1);
         var category = new Category(0, "category");
         crudRepository.run((Consumer<Session>) session -> session.persist(category));
@@ -154,7 +154,7 @@ class HbmTaskRepositoryTest {
 
     @Test
     public void whenFindByStatus() throws Exception {
-        var user = new User(0, "Test", "login", "password");
+        var user = new User(0, "Test", "login", "password", "UTC+3");
         var priority = new Priority(0, "Test", 1);
         var category = new Category(0, "category");
         crudRepository.run((Consumer<Session>) session -> session.persist(category));
@@ -176,7 +176,7 @@ class HbmTaskRepositoryTest {
 
     @Test
     public void whenCompleteExistThenTaskDoneTrue() throws Exception {
-        var user = new User(0, "Test", "login", "password");
+        var user = new User(0, "Test", "login", "password", "UTC+3");
         var priority = new Priority(0, "Test", 1);
         var category = new Category(0, "category");
         crudRepository.run((Consumer<Session>) session -> session.persist(category));

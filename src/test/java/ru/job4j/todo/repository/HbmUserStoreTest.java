@@ -35,7 +35,7 @@ class HbmUserStoreTest {
 
     @Test
     public void whenSaveThenGetUserOptional() {
-        var user = new User(0, "Test", "login", "password");
+        var user = new User(0, "Test", "login", "password", "UTC+3");
         var actualOptionalUser = userStore.save(user);
         assertThat(actualOptionalUser).isEqualTo(Optional.of(user));
     }
@@ -49,7 +49,7 @@ class HbmUserStoreTest {
     @Test
     public void whenSaveAndFindByLoginAndPass() {
         var savedUser = userStore.save(
-                new User(0, "Test", "login", "password")
+                new User(0, "Test", "login", "password", "UTC+3")
         ).get();
         var actualUser = userStore.findByLoginAndPassword(savedUser.getLogin(), savedUser.getPassword()).get();
         assertThat(actualUser).isEqualTo(savedUser);

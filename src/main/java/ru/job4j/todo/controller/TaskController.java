@@ -11,6 +11,7 @@ import ru.job4j.todo.service.PriorityService;
 import ru.job4j.todo.service.TaskService;
 
 import javax.servlet.http.HttpSession;
+import java.time.ZoneId;
 import java.util.List;
 
 @Controller
@@ -22,8 +23,16 @@ public class TaskController {
     private final CategoryService categoryService;
 
     @GetMapping
-    public String getAll(Model model) {
-        model.addAttribute("tasksDto", taskService.findAllTaskDtoOrderById());
+    public String getAll(Model model, HttpSession session) {
+        User user = (User) session.getAttribute("user");
+        var tasksDto = taskService.findAllTaskDtoOrderById();
+        tasksDto.forEach(taskDto ->
+                taskDto.setCreated(taskDto.getCreated()
+                    .atZone(ZoneId.of("UTC"))
+                    .withZoneSameInstant(ZoneId.of(user.getTimezone()))
+                    .toLocalDateTime())
+        );
+        model.addAttribute("tasksDto", tasksDto);
         return "tasks/list";
     }
 

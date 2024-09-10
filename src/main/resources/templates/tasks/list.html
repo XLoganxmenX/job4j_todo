@@ -51,7 +51,7 @@
                         </div>
                         <a th:text="${taskDto.title}" th:href="@{tasks/{taskId}(taskId=${taskDto.id})}"></a>
                     </td>
-                    <td th:text="${#temporals.format(taskDto.created, 'hh:mm:ss dd-MM-yyyy')}" />
+                    <td th:text="${#temporals.format(taskDto.created, 'HH:mm:ss dd-MM-yyyy')}" />
                     <td th:text="${taskDto.priorityName}" />
                     <td th:text="${taskDto.done ? 'Выполнено' : 'Новое'}" />
                     <td th:text="${taskDto.userName}" />
